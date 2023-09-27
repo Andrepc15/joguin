@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Frango Fugitivo</title>
+    <style>
+        body {
+            background-color: #ffeaa7; /* Cor de fundo de galinheiro */
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            color: #e17055; /* Cor do título */
+        }
+        #game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        #startButton {
+            padding: 10px 20px;
+            background-color: #6ab04c; /* Cor do botão Iniciar */
+            color: white;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #frango-container {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            left: 0;
+            top: 0;
+        }
+        #frango {
+            font-size: 80px;
+            position: absolute;
+            cursor: pointer;
+        }
+        #enigma-container {
+            display: none;
+            align-items: center;
+            margin-top: 20px;
+        }
+        #enigma-input {
+            font-size: 16px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1 id="game-title">Frango Fugitivo</h1>
+        <button id="startButton">Iniciar Jogo</button>
+        <div id="frango-container">
+            <div id="frango" onclick="capturarFrango()">&#x1F414;</div>
+        </div>
+        <div id="enigma-container">
+            <label for="enigma-input">Quem nasceu primeiro, o ovo ou a galinha?</label>
+            <input type="text" id="enigma-input" onkeydown="verificarResposta(event)">
+        </div>
+    </div>
+    <script>
+        const startButton = document.getElementById('startButton');
+        const gameTitle = document.getElementById('game-title');
+        const frangoContainer = document.getElementById('frango-container');
+        const frango = document.getElementById('frango');
+        const enigmaContainer = document.getElementById('enigma-container');
+        const enigmaInput = document.getElementById('enigma-input');
+        let gameStarted = false;
+        let galinhaMovendo = false;
+
+        startButton.addEventListener('click', () => {
+            if (!gameStarted) {
+                startGame();
+            }
+        });
+
+        function mostrarEnigma() {
+            if (gameStarted && !galinhaMovendo) {
+                enigmaContainer.style.display = 'block';
+                pararGalinha();
+            }
+        }
+
+        function capturarFrango() {
+            if (gameStarted && galinhaMovendo) {
+                enigmaContainer.style.display = 'block';
+                galinhaMovendo = false;
+            }
+        }
+
+        function verificarResposta(event) {
+            if (event.key === 'Enter') {
+                const resposta = enigmaInput.value.toLowerCase();
+                if (resposta === 'a galinha') {
+                    alert('Você capturou o frango! Parabéns!!!! Bem Clara sei o tanto que deve ser díficil e cansativo ir no SENAI todos os dias mas decidi fazer esse passa tempo :) Assim tive essa ideia kkkk e é isso espero que tenha gostado e se tiver conseguido tirar um sorriso seu já valeu a pena:)');
+                } else {
+                    alert('Oops, o frango escapou! Tente novamente.');
+                }
+                resetGame();
+            }
+        }
+
+        function pararGalinha() {
+            galinhaMovendo = false;
+        }
+
+        function moverGalinha() {
+            if (!galinhaMovendo) return;
+
+            const maxX = window.innerWidth - frango.clientWidth;
+            const maxY = window.innerHeight - frango.clientHeight;
+            const newX = Math.random() * maxX;
+            const newY = Math.random() * maxY;
+
+            frango.style.left = newX + 'px';
+            frango.style.top = newY + 'px';
+
+            setTimeout(moverGalinha, 1000); // Velocidade reduzida para 1 segundo
+        }
+
+        function startGame() {
+            gameTitle.style.display = 'none';
+            startButton.style.display = 'none';
+            enigmaContainer.style.display = 'none';
+            gameStarted = true;
+            galinhaMovendo = true;
+            moverGalinha();
+        }
+
+        function resetGame() {
+            gameTitle.style.display = 'block';
+            startButton.style.display = 'block';
+            enigmaContainer.style.display = 'none';
+            gameStarted = false;
+            galinhaMovendo = false;
+            frango.style.left = '0';
+            frango.style.top = '0';
+        }
+    </script>
+</body>
+</html>
